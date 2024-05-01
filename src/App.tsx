@@ -1,6 +1,7 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import { WalletStatus } from "./WalletStatus";
+import {ZkLogin} from "./components/zkLogin";
 
 function App() {
   return (
@@ -17,9 +18,10 @@ function App() {
         <Box>
           <Heading>dApp Starter Template</Heading>
         </Box>
+        
 
         <Box>
-          <ConnectButton />
+          <ZkLogin />
         </Box>
       </Flex>
       <Container>
@@ -27,10 +29,15 @@ function App() {
           mt="5"
           pt="2"
           px="4"
-          style={{ background: "var(--gray-a2)", minHeight: 500 }}
+          style={{ background: "var(--gray-a2)", minHeight: 500 , maxHeight: 1000}}
         >
+          
           <WalletStatus />
+          
+          
         </Container>
+
+        
       </Container>
     </>
   );
