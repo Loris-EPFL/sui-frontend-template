@@ -3,18 +3,40 @@ import { Container, Flex, Heading, Text } from "@radix-ui/themes";
 import { OwnedObjects } from "./OwnedObjects";
 import { AuthService } from './utils/authService';
 import { SuiService } from './utils/suiService';
-import { useState } from "react";
-import { useEffect } from "react";
-import { useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { AccountData } from './components/zkLogin';
+
 
 export function WalletStatus() {
   const account = useCurrentAccount();
 
   let walletAddress;
-  //const suiService = new SuiService();
+
+  const setupDataKey = 'zklogin-demo.setup';
+  const accountDataKey = 'zklogin-demo.accounts';
+
+  function loadAccounts(): AccountData[] {
+    const dataRaw = localStorage.getItem(accountDataKey);
+    if (!dataRaw) {
+        return [];
+    }
+    const data: AccountData[] = JSON.parse(dataRaw);
+    return data;
+}
+
+  
+
+  const accounts = useRef<AccountData[]>(loadAccounts()); // useRef() instead of useState() because of setInterval()
+  const [balances, setBalances] = useState<Map<string, number>>(new Map()); // Map<Sui address, SUI balance>
 
   /*
+  //Local storage keys
 
+  const setupDataKey = 'zklogin-demo.setup';
+  const accountDataKey = 'zklogin-demo.accounts';
+
+  
+  
   const getBalance = useCallback(async () => {
     try {
       if (AuthService.isAuthenticated()) {

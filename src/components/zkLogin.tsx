@@ -36,7 +36,7 @@ const accountDataKey = 'zklogin-demo.accounts';
 
 type OpenIdProvider = 'Google' | 'Twitch' | 'Facebook';
 
-type SetupData = {
+export type SetupData = {
     provider: OpenIdProvider;
     maxEpoch: number;
     randomness: string;
@@ -44,7 +44,7 @@ type SetupData = {
     ephemeralPrivateKey: string;
 }
 
-type AccountData = {
+export type AccountData = {
     provider: OpenIdProvider;
     userAddr: string;
     zkProofs: any; // TODO: add type
@@ -357,7 +357,7 @@ export const ZkLogin: React.FC = () =>
         
         <div id='login-buttons' className='section'>
             <ConnectButton />
-            <h2>Log in:</h2>
+            <h2>Log in</h2>
             
             {openIdProviders.map(provider =>
                 <button
@@ -368,6 +368,19 @@ export const ZkLogin: React.FC = () =>
                     {provider}
                 </button>
             )}
+        </div>
+
+        <div>
+            {accounts.current.map(account =>{
+                return (
+                    <div key={account.userAddr} className='account'>
+                        <h2>{account.provider}</h2>
+                        <p>Address: {shortenAddress(account.userAddr)}</p>
+                        <p>Balance: {balances.get(account.userAddr)} SUI</p>
+                        <button onClick={() => sendTransaction(account)}>Send transaction</button>
+                    </div>
+                );
+            })}
         </div>
         
     </div>
