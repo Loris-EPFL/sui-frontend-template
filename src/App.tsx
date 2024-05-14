@@ -1,7 +1,7 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import { WalletStatus } from "./WalletStatus";
-import {ZkLogin} from "./components/zkLogin";
+import {ZkLogin} from "./components/zkLogin2";
 
 function App() {
   return (
@@ -20,9 +20,7 @@ function App() {
         </Box>
         
 
-        <Box>
-          <ZkLogin />
-        </Box>
+       
       </Flex>
       <Container>
         <Container
@@ -31,6 +29,7 @@ function App() {
           px="4"
           style={{ background: "var(--gray-a2)", minHeight: 500 , maxHeight: 1000}}
         >
+          <ZkLogin />
           
           <WalletStatus />
           

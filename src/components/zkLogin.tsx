@@ -15,6 +15,8 @@ import { decodeJwt } from 'jose';
 import { useEffect, useRef, useState } from 'react';
 //import './App.less';
 import { ConnectButton } from "@mysten/dapp-kit";
+import { NetworkName, makeExplorerUrl, requestSuiFromFaucet, shortenSuiAddress } from '@polymedia/suits';
+
 
 
 /* Configuration */
@@ -370,15 +372,44 @@ export const ZkLogin: React.FC = () =>
             )}
         </div>
 
-        <div>
-            {accounts.current.map(account =>{
+        <div id='accounts' className='section'>
+            <h2>Accounts:</h2>
+            {accounts.current.map(acct => {
+                const balance = balances.get(acct.userAddr);
+                const explorerLink = makeExplorerUrl(NETWORK, 'address', acct.userAddr);
                 return (
-                    <div key={account.userAddr} className='account'>
-                        <h2>{account.provider}</h2>
-                        <p>Address: {shortenAddress(account.userAddr)}</p>
-                        <p>Balance: {balances.get(account.userAddr)} SUI</p>
-                        <button onClick={() => sendTransaction(account)}>Send transaction</button>
+                <div className='account' key={acct.userAddr}>
+                    <div>
+                        <label className={`provider ${acct.provider}`}>{acct.provider}</label>
                     </div>
+                    <div>
+                        Address: <a target='_blank' rel='noopener noreferrer' href={explorerLink}>
+                            {shortenAddress(acct.userAddr)}
+                        </a>
+                    </div>
+                    <div>User ID: {acct.sub}</div>
+                    <div>Balance: {typeof balance === 'undefined' ? '(loading)' : `${balance} SUI`}</div>
+                    <button
+                        className={`btn-send ${!balance ? 'disabled' : ''}`}
+                        disabled={!balance}
+                        onClick={() => {sendTransaction(acct)}}
+                    >
+                        Send transaction
+                    </button>
+                    { balance === 0 &&
+                        <button
+                            className='btn-faucet'
+                            onClick={() => {
+                                requestSuiFromFaucet(NETWORK, acct.userAddr);
+                                setModalContent('💰 Requesting SUI from faucet. This will take a few seconds...');
+                                setTimeout(() => { setModalContent('') }, 3000);
+                            }}
+                        >
+                            Use faucet
+                        </button>
+                    }
+                    <hr/>
+                </div>
                 );
             })}
         </div>
